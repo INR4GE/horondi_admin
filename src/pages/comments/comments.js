@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+
 import { Typography } from '@material-ui/core/';
 import { Pagination } from '@material-ui/lab';
 
@@ -11,7 +11,7 @@ import {
   getRecentComments,
   setCommentsCurrentPage,
   deleteComment
-  , getCommentsByProduct } from '../../redux/comments/comments.actions';
+} from '../../redux/comments/comments.actions';
 
 import { closeDialog } from '../../redux/dialog-window/dialog-window.actions';
 import useSuccessSnackbar from '../../utils/use-success-snackbar';
@@ -26,7 +26,7 @@ const { REMOVE_COMMENT_TITLE } = config.buttonTitles;
 const { REMOVE_COMMENT_MESSAGE, NO_COMMENTS_MESSAGE } = config.messages;
 const { RECENT_COMMENTS } = commentsTranslations;
 
-const CommentsPage = ({ productId }) => {
+const CommentsPage = () => {
   const classes = useStyles();
   const { openSuccessSnackbar } = useSuccessSnackbar();
   const {
@@ -42,24 +42,18 @@ const CommentsPage = ({ productId }) => {
     currentPage: Comments.pagination.currentPage,
     commentsPerPage: Comments.pagination.commentsPerPage
   }));
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(
-      productId
-        ? getCommentsByProduct({
-          limit: commentsPerPage,
-          skip: currentPage * commentsPerPage,
-          commentsPerPage,
-          id: productId
-        })
-        : getRecentComments({
-          limit: commentsPerPage,
-          skip: currentPage * commentsPerPage,
-          commentsPerPage
-        })
+      getRecentComments({
+        limit: commentsPerPage,
+        skip: currentPage * commentsPerPage,
+        commentsPerPage
+      })
     );
-  }, [dispatch, commentsPerPage, currentPage, productId]);
+  }, [dispatch, commentsPerPage, currentPage]);
 
   const commentDeleteHandler = (id) => {
     const removeComment = () => {
@@ -95,7 +89,6 @@ const CommentsPage = ({ productId }) => {
             showEdit={false}
             showAvatar={false}
             date={createdAt}
-            userName={comment.user.name}
             text={comment.text}
             deleteHandler={() => commentDeleteHandler(comment._id)}
           />
@@ -128,10 +121,6 @@ const CommentsPage = ({ productId }) => {
       </div>
     </div>
   );
-};
-
-CommentsPage.propTypes = {
-  productId: PropTypes.number.isRequired
 };
 
 export default CommentsPage;

@@ -5,8 +5,7 @@ import { config } from '../../configs';
 import {
   getCommentsByType,
   getRecentComments,
-  deleteComment,
-  getCommentsByProduct
+  deleteComment
 } from './comments.operations';
 
 import {
@@ -20,8 +19,7 @@ import {
 import {
   GET_COMMENTS_BY_TYPE,
   GET_RECENT_COMMENTS,
-  DELETE_COMMENT,
-  GET_COMMENTS_BY_PRODUCTS
+  DELETE_COMMENT
 } from './comments.types';
 
 import {
@@ -84,28 +82,6 @@ export function* handleCommentDelete({ payload }) {
   }
 }
 
-export function* handleCommentsByProduct({
-  payload = {
-    skip: 0,
-    limit: 20,
-    commentsPerPage: 10
-  }
-}) {
-  try {
-    yield put(setCommentsLoading(true));
-
-    const comments = yield call(getCommentsByProduct, payload);
-    yield put(
-      setCommentsPagesCount(Math.ceil(comments.count / payload.commentsPerPage))
-    );
-    yield put(setComments(comments.items));
-
-    yield put(setCommentsLoading(false));
-  } catch (error) {
-    yield call(handleCommentsError, error);
-  }
-}
-
 export function* handleCommentsError(error) {
   yield put(setCommentsLoading(false));
   yield put(setCommentError({ error }));
@@ -125,5 +101,4 @@ export default function* commentsSaga() {
   yield takeEvery(GET_COMMENTS_BY_TYPE, handleCommentsByTypeLoad);
   yield takeEvery(GET_RECENT_COMMENTS, handleRecentCommentsLoad);
   yield takeEvery(DELETE_COMMENT, handleCommentDelete);
-  yield takeEvery(GET_COMMENTS_BY_PRODUCTS, handleCommentsByProduct);
 }

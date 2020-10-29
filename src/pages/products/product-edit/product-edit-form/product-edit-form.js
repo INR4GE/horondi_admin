@@ -31,7 +31,6 @@ import { productsTranslations } from '../../../../translations/product.translati
 import ProductCarousel from './product-carousel';
 import DeleteButton from '../../../../components/buttons/delete-button';
 import { config } from '../../../../configs';
-import CommentsPage from '../../../comments';
 
 const { priceLabel } = config.labels.product;
 
@@ -305,7 +304,6 @@ const ProductEditForm = () => {
             />
           </Paper>
         </Grid>
-        <CommentsPage productId={product._id} />
       </Grid>
     </div>
   );
